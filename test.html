@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דף צרו קשר</title>
+    <style>
+        /* General page styling */
+        
+        body {
+            background-color: #121212;
+            color: white;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        header {
+            background-color: #1e1e1e;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+        }
+        
+        h1 {
+            font-family: 'Algerian', sans-serif;
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            margin: 10px 0;
+        }
+        
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+            z-index: -1;
+            border-radius: 10px;
+            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+        /* Calendar container styling */
+        
+        #calendar-container {
+            position: relative;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 8px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        
+        th {
+            background-color: #1e1e1e;
+            color: white;
+        }
+        
+        td {
+            background-color: #333;
+        }
+        
+        .calendar-day {
+            display: inline-block;
+            padding: 5px;
+            cursor: pointer;
+            margin: 5px;
+            background-color: #666;
+            border-radius: 5px;
+        }
+        
+        .calendar-day:hover {
+            background-color: #ff69b4;
+        }
+        /* Navigation menu styling */
+        
+        nav ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+        
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+        
+        nav a {
+            position: relative;
+            color: white;
+            text-decoration: none;
+            padding-bottom: 3px;
+            transition: border-bottom 0.3s ease;
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        nav a:hover::after {
+            transform: scaleX(1);
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h6>בס"ד</h6>
+        <h1 style="color: rgb(17, 18, 17);">צרו קשר</h1>
+
+        <!-- Navigation menu -->
+        <nav>
+            <ul>
+                <li><a href="פרוייקט יד HTML.html">דף הבית</a></li>
+                <li><a href="HTML אודות.html">אודות</a></li>
+                <li><a href="HTML צרו קשר.html">צור קשר</a></li>
+                <li><a href="עבודות HTML.html">עבודות</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Representative image for the home page -->
+    <img src="תמונת צרו קשר.jpg" alt="תמונה ייצוגית לדף צור קשר">
+
+    <!-- Calendar container -->
+    <div id="calendar-container">
+        <h2>יומן תורים</h2>
+        <table id="calendar">
+            <thead>
+                <tr>
+                    <th>ראשון</th>
+                    <th>שני</th>
+                    <th>שלישי</th>
+                    <th>רביעי</th>
+                    <th>חמישי</th>
+                    <th>שישי</th>
+                    <th>שבת</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Dates and number of days in each month will be added here via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Function to generate the calendar
+        function generateCalendar() {
+            const calendarContainer = document.getElementById('calendar');
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+            const currentYear = currentDate.getFullYear();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+            const daysOfWeek = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+
+            let dayCounter = 1;
+            let tableContent = '';
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayOfWeek = new Date(currentYear, currentMonth, day).getDay();
+                if (day === 1) {
+                    tableContent += '<tr>';
+                    for (let i = 0; i < dayOfWeek; i++) {
+                        tableContent += '<td></td>';
+                    }
+                }
+                tableContent += `<td><button class="calendar-day" data-day="${day}">${day}</button></td>`;
+                if (dayOfWeek === 6 || day === daysInMonth) {
+                    tableContent += '</tr>';
+                }
+            }
+
+            calendarContainer.querySelector('tbody').innerHTML = tableContent;
+
+            const calendarDays = document.querySelectorAll('.calendar-day');
+            calendarDays.forEach(day => {
+                day.addEventListener('click', () => {
+                    const selectedDay = day.getAttribute('data-day');
+                    openTimeSlots(selectedDay);
+                });
+            });
+        }
+
+        // Call the function to generate the calendar
+        generateCalendar();
+    </script>
+
+
+</body>
+
+</html>
