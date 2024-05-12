@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דף צרו קשר</title>
+    <style>
+        /* סגנון עיצוב הדף */
+        body {
+            background-color: #121212; /* צבע רקע של הדף */
+            color: white; /* צבע טקסט */
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif; /* גופן תווים */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            background-color: #1e1e1e; /* צבע רקע של הכותרת */
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+        }
+
+        h1 {
+            font-family: 'Algerian', sans-serif; /* סגנון גופן לכותרת */
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.9); /* צבע רקע של הכותרת */
+            padding: 10px;
+            margin: 10px 0; /* מרווח מסביב לכותרת */
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+            z-index: -1;
+        }
+
+        /* סגנון לקונטיינר של לוח השנה */
+        #calendar-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7); /* צבע רקע */
+            padding: 20px;
+            border-radius: 8px;
+            color: white; /* צבע טקסט */
+        }
+
+        /* סגנון ליום בלוח השנה */
+        .calendar-day {
+            display: inline-block;
+            padding: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        /* סגנון ליום שנבחר בלוח השנה */
+        .selected {
+            background-color: #ff69b4; /* צבע רקע כאשר היום נבחר */
+        }
+
+        /* סגנון לתפריט ניווט */
+        nav ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 10px; /* מרווח בין פריטי התפריט */
+        }
+
+        nav a {
+            position: relative;
+            color: white;
+            text-decoration: none;
+            padding-bottom: 3px; /* קו תחתון */
+            transition: border-bottom 0.3s ease;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        nav a:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* סגנון לטבלה */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #1e1e1e; /* צבע רקע */
+            color: white; /* צבע טקסט */
+        }
+
+        td {
+            background-color: #333; /* צבע רקע */
+        }
+
+        /* סגנון לתא שנבחר בלוח השעות */
+        .selected {
+            background-color: #ff69b4; /* צבע רקע של התא שנבחר */
+        }
+
+        /* סגנון לקונטיינר של השעות */
+        #time-slots-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7); /* צבע רקע */
+            padding: 20px;
+            border-radius: 8px;
+            color: white; /* צבע טקסט */
+            z-index: 9999;
+        }
+
+        #time-slots-container button {
+            margin-top: 10px;
+        }
+
+        /* סגנון לקונטיינר של טופס התור */
+        #appointment-form-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7); /* צבע רקע */
+            padding: 20px;
+            border-radius: 8px;
+            color: white; /* צבע טקסט */
+            z-index: 9999;
+            width: 70%; /* רוחב הטופס */
+        }
+
+        /* סגנון להודעת אישור */
+        #confirmation-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.7); /* צבע רקע */
+            padding: 20px;
+            border-radius: 8px;
+            color: white; /* צבע טקסט */
+            display: none;
+            z-index: 9999;
+        }
+
+        /* סגנון ליום שנבחר בלוח השנה */
+        .selected-day {
+            background-color: #ff0000; /* צבע זוהר ליום נבחר */
+            color: white; /* צבע טקסט */
+        }
+
+        /* סגנון לטבלת הלוח */
+        #calendar-container table {
+            border-collapse: separate;
+            border-spacing: 5px;
+        }
+
+        #calendar-container th, #calendar-container td {
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #calendar-container td:hover {
+            background-color: #ff69b4; /* צבע רקע כאשר העכבר מעל תא היום */
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h6>בס"ד</h6>
+    <h1 style="color: rgb(17, 18, 17);">צרו קשר</h1>
+
+    <!-- תפריט ניווט -->
+    <nav>
+        <ul>
+            <li><a href="פרוייקט יד HTML.html">דף הבית</a></li>
+            <li><a href="HTML אודות.html">אודות</a></li>
+            <li><a href="HTML צרו קשר.html">צור קשר</a></li>
+            <li><a href="עבודות HTML.html">עבודות</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- תמונה ייצוגית לדף הבית -->
+<img src="תמונת צרו קשר.jpg" alt="תמונה ייצוגית לדף הבית">
+
+<!-- קונטיינר של לוח השנה -->
+<div id="calendar-container">
+    <h2>יומן תורים</h2>
+    <table id="calendar">
+        <thead>
+            <tr>
+                <th>ראשון</th>
+                <th>שני</th>
+                <th>שלישי</th>
+                <th>רביעי</th>
+                <th>חמישי</th>
+                <th>שישי</th>
+                <th>שבת</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- כאן יוספו התאריכים ומספר הימים בכל חודש ב-JavaScript -->
+        </tbody>
+    </table>
+</div>
+
+<!-- קונטיינר של השעות -->
+<div id="time-slots-container" style="display: none;">
+    <h3>בחר שעה</h3>
+    <select id="time-slot" required>
+        <option value="">בחר שעה</option>
+    </select>
+    <button id="select-time-btn">בחר</button>
+</div>
+
+<!-- קונטיינר של טופס התור -->
+<div id="appointment-form-container" style="display: none;">
+    <h3>קביעת תור</h3>
+    <form id="appointment-form">
+        <label for="name">שם:</label>
+        <input type="text" id="name" required>
+        <label for="phone">טלפון:</label>
+        <input type="tel" id="phone" required>
+        <label>סוג תספורת:</label><br>
+        <!-- אפשרות 1: תספורת בלבד -->
+        <input type="radio" id="haircut-only" name="haircut-type" value="תספורת בלבד">
+        <label for="haircut-only">תספורת בלבד</label><br>
+        <!-- אפשרות 2: תספורת + זקן -->
+        <input type="radio" id="haircut-beard" name="haircut-type" value="תספורת + זקן">
+        <label for="haircut-beard">תספורת + זקן</label><br>
+        <!-- אפשרות 3: תספורת + זקן + גבות + שעווה -->
+        <input type="radio" id="haircut-beard-eyebrows-shave" name="haircut-type" value="תספורת + זקן + גבות + שעווה">
+        <label for="haircut-beard-eyebrows-shave">תספורת + זקן + גבות + שעווה</label><br>
+        <!-- אפשרות 4: תספורת צבע/ציור -->
+        <input type="radio" id="haircut-color-painting" name="haircut-type" value="תספורת צבע/ציור">
+        <label for="haircut-color-painting">תספורת צבע/ציור</label><br>
+        <button type="submit">שליחת טופס</button>
+    </form>
+</div>
+
+<!-- הודעת אישור -->
+<div id="confirmation-message" style="display: none;"></div>
+
+<script>
+    // פונקציה ליצירת לוח השנה
+    function generateCalendar() {
+        const calendarContainer = document.getElementById('calendar');
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        
+        const daysOfWeek = ['ראשון', 'שני', 'שלישי', 'רביעי', 'חמישי', 'שישי', 'שבת'];
+        
+        let dayCounter = 1;
+        let tableContent = '';
+
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayOfWeek = new Date(currentYear, currentMonth, day).getDay();
+            if (day === 1) {
+                tableContent += '<tr>';
+                for (let i = 0; i < dayOfWeek; i++) {
+                    tableContent += '<td></td>';
+                }
+            }
+            tableContent += `<td><button class="calendar-day" data-day="${day}">${day}</button></td>`;
+            if (dayOfWeek === 6 || day === daysInMonth) {
+                tableContent += '</tr>';
+            }
+        }
+
+        calendarContainer.querySelector('tbody').innerHTML = tableContent;
+
+        const calendarDays = document.querySelectorAll('.calendar-day');
+        calendarDays.forEach(day => {
+            day.addEventListener('click', () => {
+                const selectedDay = day.getAttribute('data-day');
+                openTimeSlots(selectedDay);
+            });
+        });
+    }
+
+    // פונקציה לפתיחת שעות התור
+    function openTimeSlots(selectedDay) {
+        const timeSlotsContainer = document.getElementById('time-slots-container');
+        timeSlotsContainer.style.display = 'block';
+        const timeSelect = document.getElementById('time-slot');
+        timeSelect.innerHTML = '<option value="">בחר שעה</option>';
+        for (let hour = 9; hour < 19; hour++) {
+            for (let minutes of ['00', '30']) {
+                const time = `${hour}:${minutes}`;
+                const option = document.createElement('option');
+                option.textContent = time;
+                option.value = time;
+                timeSelect.appendChild(option);
+            }
+        }
+        const selectTimeBtn = document.getElementById('select-time-btn');
+        selectTimeBtn.addEventListener('click', () => {
+            const selectedTime = timeSelect.value;
+            openAppointmentForm(selectedDay, selectedTime);
+        });
+    }
+
+    // פונקציה לפתיחת טופס התור
+    function openAppointmentForm(selectedDay, selectedTime) {
+        const appointmentFormContainer = document.getElementById('appointment-form-container');
+        appointmentFormContainer.style.display = 'block';
+        const appointmentForm = document.getElementById('appointment-form');
+        appointmentForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const haircutType = document.querySelector('input[name="haircut-type"]:checked').value;
+            const confirmationMessage = document.getElementById('confirmation-message');
+            confirmationMessage.textContent = `תור נקבע בהצלחה ליום ${selectedDay} בשעה ${selectedTime} עבור ${name}, סוג התספורת שנבחר: ${haircutType}, נשוב אליך בהקדם האפשרי.`;
+            confirmationMessage.style.display = 'block';
+            appointmentForm.reset();
+            setTimeout(() => {
+                confirmationMessage.style.display = 'none';
+            }, 5000);
+        });
+    }
+
+    // קריאה לפונקציה ליצירת לוח השנה
+    generateCalendar();
+</script>
+ 
+
+</body>
+</html>

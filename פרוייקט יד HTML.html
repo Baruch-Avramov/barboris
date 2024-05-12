@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>דף הבית </title>
+    <style>
+        /* סגנון כללי לגוף הדף */
+        body {
+            background-color: black; /* צבע רקע של הדף */
+            color: white; /* צבע הטקסט בדף */
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* סגנון לאיזור העל שבראש הדף */
+        header {
+            background-color: #1e1e1e; /* צבע רקע של כותרת העל */
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        /* סגנון ללוגו */
+        .logo {
+            font-family: 'Algerian', sans-serif;
+            font-size: 3em;
+            color: white;
+            text-decoration: none;
+        }
+
+        /* סגנון לפסקה */
+        p {
+            color: rgb(245, 241, 241); /* צבע הטקסט של הפסקה */
+            margin: 30px auto; 
+            max-width: 800px; 
+            font-size: 1.2em;
+            line-height: 1.6;
+            text-align: justify;
+            font-weight: bold;
+        }
+
+        /* סגנון לתמונה */
+        img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* סגנון לתפריט */
+        nav ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 10px;
+        }
+
+        nav a {
+            position: relative;
+            color: white;
+            text-decoration: none;
+            padding-bottom: 3px; /* קו תחתון */
+            transition: border-bottom 0.3s ease;
+        }
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: white;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        nav a:hover::after {
+            transform: scaleX(1);
+        }
+
+    </style></head>
+
+<body>
+
+    <header>
+        <h6>בס"ד</h6>
+        <a href="#" class="logo">✂️💈 Barber_Israel</a>
+        <nav>
+            <ul>
+                <li><a href="#">דף הבית</a></li> <!-- קישור לדף הבית -->
+                <li><a href="פרוייקט יד HTML.html">אודות</a></li> <!-- קישור לדף אודות -->
+                <li><a href="HTML צרו קשר.html">צור קשר</a></li> <!-- קישור לדף צור קשר -->
+                <li><a href="עבודות HTML.html">עבודות</a></li> <!-- קישור לדף עבודות -->
+            </ul>
+        </nav>
+    </header>
+
+    <p>אהלן גבר, הגעת למשפחת המספרה.<br> אנחנו ”ברברס“ - ספרי גברים, כן, אך ורק.<br> אמרנו גברים, אמרנו זְקָנִים אנחנו מתמקצעים בעיצוב הזקן לפי צורת הפנים כדי שיחמיא לנו.<br>
+        האני מאמין שלנו : "פרא מסודר" - לקבל את הפרא שיש בנו ולנקות את המיותר.<br> לתת את הטוויסט הנכון, מהאולד סקול ועד הניו סקול. מוזמן לקבוע תור, נחכה לך בזמן עם דרינק על העמדה. תבוא פשוט.
+        צוות המספרה</p>
+
+    <main>
+        <section>
+            <img src="תמונה דף הבית.jpg" alt="תמונה ייצוגית לדף הבית">
+        </section>
+    </main>
+
+</body>
+
+</html>
