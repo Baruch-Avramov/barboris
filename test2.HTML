@@ -14,7 +14,7 @@
         }
         
         .container {
-            max-width: 800px;
+            max-width: 500px;
             margin: 50px auto;
             padding: 20px;
             background-color: #fff;
@@ -25,6 +25,7 @@
         h1 {
             text-align: center;
             color: #333;
+            margin-bottom: 20px;
         }
         
         p {
@@ -39,12 +40,15 @@
         input[type="email"],
         input[type="tel"],
         button {
-            width: 100%;
+            width: calc(100% - 22px);
+            /* Adjusted width for better alignment */
             padding: 10px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
             border-radius: 5px;
             box-sizing: border-box;
+            font-size: 16px;
+            /* Increased font size for better readability */
         }
         
         button {
@@ -56,6 +60,12 @@
         button:hover {
             background-color: #555;
         }
+        
+        #errorMessage {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -63,39 +73,73 @@
     <div class="container">
         <h1>Make an Appointment</h1>
         <p>Select a date, time, and type of haircut for your appointment:</p>
-        <input type="date" id="appointmentDate">
-        <select id="appointmentTime">
+        <input type="date" id="appointmentDate" name="appointmentDate">
+        <select id="appointmentTime" name="appointmentTime">
             <!-- Times will be populated here -->
         </select>
-        <select id="haircutType">
+        <select id="haircutType" name="haircutType">
             <option value="standard">Standard</option>
             <option value="fade">Fade</option>
             <option value="buzz">Buzz Cut</option>
             <option value="other">Other</option>
         </select>
-        <input type="text" id="name" placeholder="Your Name" required>
-        <input type="email" id="email" placeholder="Your Email" required>
-        <input type="tel" id="phone" placeholder="Your Phone" required>
+        <input type="text" id="name" name="name" placeholder="Your Name" required>
+        <input type="email" id="email" name="email" placeholder="Your Email" required>
+        <input type="tel" id="phone" name="phone" placeholder="Your Phone" required>
+        <button id="submitBtn">Submit Appointment</button>
+        <div id="errorMessage"></div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const dateInput = document.getElementById('appointmentDate');
             const appointmentTimeSelect = document.getElementById('appointmentTime');
+            const submitBtn = document.getElementById('submitBtn');
+            const errorMessage = document.getElementById('errorMessage');
 
-            // Populate times initially
+            // Call showAvailableTimes immediately to check if a date is selected
             showAvailableTimes(dateInput.value, appointmentTimeSelect);
 
             // Add event listener for date change
             dateInput.addEventListener('change', function() {
                 showAvailableTimes(dateInput.value, appointmentTimeSelect);
             });
+
+            // Add event listener for submit button
+            submitBtn.addEventListener('click', function() {
+                const selectedDate = dateInput.value;
+                const selectedTime = appointmentTimeSelect.value;
+                const selectedHaircut = document.getElementById('haircutType').value;
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+
+                // Validate inputs
+                if (!selectedDate || !selectedTime || !selectedHaircut || !name || !email || !phone) {
+                    errorMessage.textContent = 'Please fill out all fields.';
+                    return;
+                }
+
+                // If all inputs are valid, you can proceed with submitting the form or handling the appointment data.
+                // For demonstration purposes, I'm just logging the appointment data.
+                console.log('Appointment Details:');
+                console.log('Date:', selectedDate);
+                console.log('Time:', selectedTime);
+                console.log('Haircut Type:', selectedHaircut);
+                console.log('Name:', name);
+                console.log('Email:', email);
+                console.log('Phone:', phone);
+
+                // Clear any previous error message
+                errorMessage.textContent = '';
+            });
         });
 
         function showAvailableTimes(selectedDate, timeSelect) {
+            const errorMessage = document.getElementById('errorMessage');
             // Validate date
             if (!selectedDate) {
-                alert('Please select a valid date.');
+                errorMessage.textContent = 'Please select a valid date.';
                 return;
             }
 
@@ -112,6 +156,9 @@
                 option.text = time;
                 timeSelect.add(option);
             });
+
+            // Clear any previous error message
+            errorMessage.textContent = '';
         }
     </script>
 </body>

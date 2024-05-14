@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('תמונת\ צרו\ קשר.jpg');
+            /* Replace 'landscape.jpg' with the path to your image */
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.7);
+            /* Adding some transparency to the form container */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        input[type="date"],
+        select,
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #555;
+        }
+        
+        #errorMessage {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Make an Appointment</h1>
+        <p>Select a date, time, and type of haircut for your appointment:</p>
+        <form id="appointmentForm" method="POST" action="/your-server-endpoint">
+            <input type="date" id="appointmentDate" name="appointmentDate">
+            <select id="appointmentTime" name="appointmentTime">
+            <!-- Times will be populated here -->
+        </select>
+            <select id="haircutType" name="haircutType">
+            <option value="1">תספורת בלבד</option>
+            <option value="2">תספורת + זקן</option>
+            <option value="3">תספורת + זקן + גבות + שעווה</option>
+            <option value="4">תספורת צבע/ציור</option>
+        </select>
+            <input type="text" id="name" name="name" placeholder="Your Name" required>
+            <input type="email" id="email" name="email" placeholder="Your Email" required>
+            <input type="tel" id="phone" name="phone" placeholder="Your Phone" required>
+            <button id="submitBtn">Submit Appointment</button>
+        </form>
+        <div id="errorMessage"></div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('appointmentDate');
+            const appointmentTimeSelect = document.getElementById('appointmentTime');
+            const form = document.getElementById('appointmentForm');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Call showAvailableTimes immediately to check if a date is selected
+            showAvailableTimes(dateInput.value, appointmentTimeSelect);
+
+            // Add event listener for date change
+            dateInput.addEventListener('change', function() {
+                showAvailableTimes(dateInput.value, appointmentTimeSelect);
+            });
+
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission behavior
+
+                const selectedDate = dateInput.value;
+                const selectedTime = appointmentTimeSelect.value;
+                const selectedHaircut = document.getElementById('haircutType').value;
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+
+                // Validate inputs
+                if (!selectedDate || !selectedTime || !selectedHaircut || !name || !email || !phone) {
+                    errorMessage.textContent = 'Please fill out all fields.';
+                    return;
+                }
+                const selectedDateTime = new Date(selectedDate);
+                if (selectedDateTime.getDay() === 5 || selectedDateTime.getDay() === 6) {
+                    errorMessage.textContent = 'Please select a date other than Friday or Saturday.';
+                    return;
+                }
+                const appointmentDateTimeStart = new Date(selectedDate + 'T' + selectedTime);
+                const appointmentDateTimeEnd = new Date(selectedDate + 'T' + addHalfHourToTime(selectedTime));
+
+                // Create an object with the appointment details
+                const appointmentData = {
+                    timeStart: appointmentDateTimeStart,
+                    timeEnd: appointmentDateTimeEnd,
+                    haircutType: parseInt(selectedHaircut),
+                    name: name,
+                    email: email,
+                    phone: phone
+                };
+                // If all inputs are valid, you can proceed with submitting the form or handling the appointment data.
+                // For demonstration purposes, I'm just logging the appointment data.
+                console.log('Appointment Details:');
+                console.log('Date:', appointmentDateTimeStart);
+                console.log('Date:', appointmentDateTimeEnd);
+                console.log('Haircut Type:', selectedHaircut);
+                console.log('Name:', name);
+                console.log('Email:', email);
+                console.log('Phone:', phone);
+
+                // Clear any previous error message
+                errorMessage.textContent = '';
+
+                fetch('http://localhost:3001/addAppointment', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(appointmentData),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('New customer and appointment:', data);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
+
+        function addHalfHourToTime(time) {
+            const [hours, minutes] = time.split(':').map(Number);
+            let newHours = hours;
+            let newMinutes = minutes + 30;
+            if (newMinutes >= 60) {
+                newHours++;
+                newMinutes -= 60;
+            }
+            return `${newHours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`;
+        }
+
+        function showAvailableTimes(selectedDate, timeSelect) {
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (!selectedDate) {
+                errorMessage.textContent = 'Please select a valid date.';
+                return;
+            }
+
+            // Validate date
+            const today = new Date();
+            const selectedDateTime = new Date(selectedDate);
+            if (selectedDateTime < today) {
+                errorMessage.textContent = 'Please select a date in the future.';
+                return;
+            }
+
+            // Simulate fetching available times from a server
+            const availableTimes = ['09:00', '09:30', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
+
+            // Clear previous options
+            timeSelect.innerHTML = '';
+
+            // Populate select with available times
+            availableTimes.forEach(time => {
+                const option = document.createElement('option');
+                option.text = time;
+                timeSelect.add(option);
+            });
+
+            // Clear any previous error message
+            errorMessage.textContent = '';
+        }
+    </script>
+</body>
+
+</html>
