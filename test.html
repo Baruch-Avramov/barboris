@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        input[type="date"],
+        select,
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        
+        button {
+            background-color: #333;
+            color: #fff;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Make an Appointment</h1>
+        <p>Select a date, time, and type of haircut for your appointment:</p>
+        <input type="date" id="appointmentDate">
+        <select id="appointmentTime">
+            <!-- Times will be populated here -->
+        </select>
+        <select id="haircutType">
+            <option value="standard">Standard</option>
+            <option value="fade">Fade</option>
+            <option value="buzz">Buzz Cut</option>
+            <option value="other">Other</option>
+        </select>
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="email" id="email" placeholder="Your Email" required>
+        <input type="tel" id="phone" placeholder="Your Phone" required>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('appointmentDate');
+            const appointmentTimeSelect = document.getElementById('appointmentTime');
+
+            // Populate times initially
+            showAvailableTimes(dateInput.value, appointmentTimeSelect);
+
+            // Add event listener for date change
+            dateInput.addEventListener('change', function() {
+                showAvailableTimes(dateInput.value, appointmentTimeSelect);
+            });
+        });
+
+        function showAvailableTimes(selectedDate, timeSelect) {
+            // Validate date
+            if (!selectedDate) {
+                alert('Please select a valid date.');
+                return;
+            }
+
+            // Simulate fetching available times from a server
+            // This could be replaced with actual API calls
+            const availableTimes = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
+
+            // Clear previous options
+            timeSelect.innerHTML = '';
+
+            // Populate select with available times
+            availableTimes.forEach(time => {
+                const option = document.createElement('option');
+                option.text = time;
+                timeSelect.add(option);
+            });
+        }
+    </script>
+</body>
+
+</html>
