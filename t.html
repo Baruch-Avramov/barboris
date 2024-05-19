@@ -99,7 +99,7 @@
             const errorMessage = document.getElementById('errorMessage');
 
             // Call showAvailableTimes immediately to check if a date is selected
-            showAvailableTimes(dateInput.value, appointmentTimeSelect);
+            // showAvailableTimes(dateInput.value, appointmentTimeSelect);
 
             // Add event listener for date change
             dateInput.addEventListener('change', function() {
@@ -121,11 +121,7 @@
                     errorMessage.textContent = 'Please fill out all fields.';
                     return;
                 }
-                const selectedDateTime = new Date(selectedDate);
-                if (selectedDateTime.getDay() === 5 || selectedDateTime.getDay() === 6) {
-                    errorMessage.textContent = 'Please select a date other than Friday or Saturday.';
-                    return;
-                }
+
                 const appointmentDateTimeStart = new Date(selectedDate + 'T' + selectedTime);
                 const appointmentDateTimeEnd = new Date(selectedDate + 'T' + addHalfHourToTime(selectedTime));
 
@@ -180,18 +176,26 @@
         }
 
         function showAvailableTimes(selectedDate, timeSelect) {
+            console.log(selectedDate);
+            console.log(timeSelect);
             const errorMessage = document.getElementById('errorMessage');
 
             if (!selectedDate) {
-                errorMessage.textContent = 'Please select a valid date.';
+                errorMessage.textContent = 'Please select a date to show available times';
+                timeSelect.innerHTML = '';
                 return;
             }
-
+            const selectedDateTime = new Date(selectedDate);
+            if (selectedDateTime.getDay() === 5 || selectedDateTime.getDay() === 6) {
+                errorMessage.textContent = 'Please select a date other than Friday or Saturday.';
+                return;
+            }
             // Validate date
             const today = new Date();
-            const selectedDateTime = new Date(selectedDate);
-            if (selectedDateTime < today) {
+            const todayWithoutTime = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            if (selectedDateTime < todayWithoutTime) {
                 errorMessage.textContent = 'Please select a date in the future.';
+                timeSelect.innerHTML = '';
                 return;
             }
 
