@@ -175,9 +175,10 @@
             return `${newHours.toString().padStart(2, '0')}:${newMinutes.toString().padStart(2, '0')}`;
         }
 
-        function showAvailableTimes(selectedDate, timeSelect) {
+        async function showAvailableTimes(selectedDate, timeSelect) {
             console.log(selectedDate);
             console.log(timeSelect);
+            let availableTimes;
             const errorMessage = document.getElementById('errorMessage');
 
             if (!selectedDate) {
@@ -199,18 +200,28 @@
                 return;
             }
 
-            // Simulate fetching available times from a server
-            const availableTimes = ['09:00', '09:30', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00'];
+            try {
+                const response = await fetch(`http://localhost:3001/availableSlots/${selectedDate}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                availableTimes = await response.json();
+                console.log(availableTimes);
+            } catch (error) {
+                console.error('There was a problem with your fetch operation:', error);
+            }
 
-            // Clear previous options
             timeSelect.innerHTML = '';
 
-            // Populate select with available times
-            availableTimes.forEach(time => {
-                const option = document.createElement('option');
-                option.text = time;
-                timeSelect.add(option);
-            });
+            if (availableTimes && Array.isArray(availableTimes)) {
+                availableTimes.forEach(time => {
+                    const option = document.createElement('option');
+                    option.text = time;
+                    timeSelect.add(option);
+                });
+            } else {
+                console.error('Data is empty or not an array:', availableTimes);
+            }
 
             // Clear any previous error message
             errorMessage.textContent = '';
